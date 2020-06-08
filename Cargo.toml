@@ -4,7 +4,7 @@ version = "0.0.1"
 edition = "2018"
 
 [lib]
-crate-type = ["staticlib", "cdylib"]
+crate-type = ["staticlib", "cdylib", "rlib" ]
 
 [[bin]]
 name = "create_snapshot"
@@ -13,3 +13,6 @@ path = "src/create_snapshot.rs"
 [dependencies]
 lazy_static = "1.4.0"
 rusty_v8 = "0.5.1"
+
+[build-dependencies]
+cbindgen = "0.14.2"

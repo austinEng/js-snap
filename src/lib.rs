@@ -13,7 +13,7 @@ pub struct JSSnap {
 }
 
 impl JSSnap {
-  fn init() {
+  pub fn init() {
     lazy_static! {
       static ref INIT: () = (|| {
         let platform = v8::new_default_platform().unwrap();
@@ -94,46 +94,4 @@ pub extern fn js_snap_instance_call<'a>(
       unsafe { *result_len = 0 };
     }
   }
-}
-
-
-#[test]
-fn rust_api_simple() {
-  JSSnap::init();
-  let mut instance = Instance::from_source("const fns = { Greet: (params) => params };", "fns");
-  if let Some(result) = instance.call("Greet", "Hello Rust") {
-    println!("\nresult:\n{}", result);
-  }
-}
-
-#[test]
-fn c_api_simple() {
-  JSSnap::init();
-  let instance = js_snap_instance_from_source(
-    std::ffi::CString::new("const fns = { Greet: (params) => params };").unwrap().as_ptr(),
-    std::ffi::CString::new("fns").unwrap().as_ptr());
-  
-  let mut result_ptr: *const std::os::raw::c_char = std::ptr::null();
-  let mut result_len: i32 = 0;
-
-  let result_ptr_ptr = &mut result_ptr as *mut *const std::os::raw::c_char;
-  let result_len_ptr = &mut result_len as *mut i32;
-
-  js_snap_instance_call(
-    instance,
-    std::ffi::CString::new("Greet").unwrap().as_ptr(),
-    std::ffi::CString::new("Hello C").unwrap().as_ptr(),
-    result_ptr_ptr,
-    result_len_ptr);
-  
-  if result_len > 0 {
-    let result = unsafe {
-      std::slice::from_raw_parts(result_ptr as *const u8, result_len as usize)
-    };
-
-    let result = std::str::from_utf8(result).unwrap();
-    println!("\nc_result:\n{}", result);
-  }
-
-  js_snap_instance_delete(instance);
 }

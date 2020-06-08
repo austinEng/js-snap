@@ -1,21 +1,27 @@
-#include <stddef.h>
+#ifndef JS_SNAP_H_
+#define JS_SNAP_H_
 
-void js_snap_init();
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-struct JSSnapInstance* js_snap_instance_from_snapshot(
-  const void* data,
-  size_t data_length,
-  const char* export_name);
+typedef struct JSSnapInstance JSSnapInstance;
 
-struct JSSnapInstance* js_snap_instance_from_source(
-  const char* source,
-  const char* export_name);
+void js_snap_init(void);
 
-void js_snap_instance_delete(struct JSSnapInstance*);
+void js_snap_instance_call(JSSnapInstance *instance,
+                           const char *name,
+                           const char *params,
+                           const char **result_ptr,
+                           int32_t *result_len);
 
-const char* js_snap_instance_call(
-  struct JSSnapInstance*,
-  const char* name,
-  const char* params,
-  const char** result_ptr,
-  int* result_len);
+void js_snap_instance_delete(JSSnapInstance *instance);
+
+JSSnapInstance *js_snap_instance_from_snapshot(const uint8_t *data,
+                                               uintptr_t data_length,
+                                               const char *export_name);
+
+JSSnapInstance *js_snap_instance_from_source(const char *source, const char *export_name);
+
+#endif /* JS_SNAP_H_ */

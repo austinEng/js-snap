@@ -25,16 +25,21 @@ void* worker_thread(void* vargp) {
     const char* result_ptr = NULL;
     int result_len = 0;
 
-    js_snap_instance_call(instance, "Greet", "{}", &result_ptr, &result_len);
+  js_snap_instance_call(instance, "Greet", "{}", &result_ptr, &result_len);
     printf(
       "thread %ld, iter %d:\n%.*s\n\n",
       thread_data->tid, i, result_len, result_ptr);
   }
 
   js_snap_instance_delete(instance);    
+  return NULL;
 }
 
 int main(int argc, char** argv) {
+  if (argc < 2) {
+    return 1;
+  }
+
   js_snap_init();
 
   int fd = open(argv[1], O_RDONLY);
