@@ -3,7 +3,7 @@ build:
 	gcc test.c ../../target/release/libjs_snap.a -I../../src/include -lm -ldl -lpthread
 
 snapshot:
-	cargo run --bin create_snapshot ./bundle.js ./snapshot.out	
+	cargo run --manifest-path ../../create_snapshot/Cargo.toml ./bundle.js ./snapshot.out
 
 test: build snapshot
 	cd ../../ && cargo test -- --nocapture
