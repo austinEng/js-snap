@@ -16,10 +16,12 @@ struct ThreadData {
 void* worker_thread(void* vargp) {
   struct ThreadData* thread_data = (struct ThreadData*)(vargp);
 
-  struct JSSnapInstance* instance = js_snap_instance_from_snapshot(
-    thread_data->data,
-    thread_data->data_length,
-    "fns");
+  struct JSSnapInstance* instance = thread_data->data != NULL 
+    ? js_snap_instance_from_snapshot(
+      thread_data->data,
+      thread_data->data_length,
+      "fns")
+    : js_snap_instance_from_bundle("fns");
 
   for (int i = 0; i < 10; ++i) {
     const char* result_ptr = NULL;
@@ -50,7 +52,7 @@ int main(int argc, char** argv) {
   pthread_t t2;
   
   struct ThreadData data1 = { t1, data, data_length };
-  struct ThreadData data2 = { t1, data, data_length };
+  struct ThreadData data2 = { t1, NULL, 0 };
 
   pthread_create(&t1, NULL, worker_thread, &data1);
   pthread_create(&t2, NULL, worker_thread, &data2);

@@ -18,6 +18,8 @@ void js_snap_instance_call(JSSnapInstance *instance,
 
 void js_snap_instance_delete(JSSnapInstance *instance);
 
+JSSnapInstance *js_snap_instance_from_bundle(const char *export_name);
+
 JSSnapInstance *js_snap_instance_from_snapshot(const uint8_t *data,
                                                uintptr_t data_length,
                                                const char *export_name);

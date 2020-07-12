@@ -12,3 +12,6 @@ rusty_v8 = "0.5.1"
 
 [build-dependencies]
 cbindgen = "0.14.2"
+
+[features]
+snapshot_bundle = []

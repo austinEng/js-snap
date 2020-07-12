@@ -54,6 +54,18 @@ pub extern fn js_snap_instance_from_snapshot<'a>(
   Box::into_raw(Box::new(Instance::from_snapshot(blob, export_name)))
 }
 
+#[cfg(feature = "snapshot_bundle")]
+#[no_mangle]
+pub extern fn js_snap_instance_from_bundle<'a>(
+    export_name: *const std::os::raw::c_char) -> *mut Instance<'a>
+{
+  let bytes: &'static [u8] = include_bytes!(env!("JS_SNAPSHOT_BUNDLE"));
+  js_snap_instance_from_snapshot(
+    bytes.as_ptr(),
+    bytes.len(),
+    export_name)
+}
+
 #[no_mangle]
 pub extern fn js_snap_instance_delete<'a>(instance: *mut Instance<'a>) -> () {
   unsafe { Box::from_raw(instance) };
